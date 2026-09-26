@@ -26,23 +26,23 @@ function EncryptionPanel() {
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    handleFile(file);
+    handleFile(event.target.files?.[0]);
   };
 
   const handleDrop = (event) => {
     event.preventDefault();
     setIsDragging(false);
 
-    const file = event.dataTransfer.files?.[0];
-    handleFile(file);
+    handleFile(event.dataTransfer.files?.[0]);
   };
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
   };
 
-  const removeFile = () => {
+  const removeFile = (event) => {
+    event.stopPropagation();
+
     setSelectedFile(null);
     setStatus("ready");
     setStatusMessage("");
@@ -64,6 +64,26 @@ function EncryptionPanel() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const handleOperationChange = (nextOperation) => {
+    if (isProcessing) {
+      return;
+    }
+
+    setOperation(nextOperation);
+    setStatus("ready");
+    setStatusMessage("");
+  };
+
+  const handleModeChange = (nextMode) => {
+    if (isProcessing) {
+      return;
+    }
+
+    setMode(nextMode);
+    setStatus("ready");
+    setStatusMessage("");
+  };
+
   const handleProcess = async () => {
     if (!selectedFile || isProcessing) {
       return;
@@ -71,10 +91,9 @@ function EncryptionPanel() {
 
     setIsProcessing(true);
     setStatus("processing");
+
     setStatusMessage(
-      operation === "encrypt"
-        ? "Encrypting your file..."
-        : "Decrypting your file...",
+      operation === "encrypt" ? "Encrypting file..." : "Decrypting file...",
     );
 
     const formData = new FormData();
@@ -100,7 +119,7 @@ function EncryptionPanel() {
             errorMessage = errorData.error;
           }
         } catch {
-          // Keep the default error message.
+          // Keep default error message.
         }
 
         throw new Error(errorMessage);
@@ -124,7 +143,6 @@ function EncryptionPanel() {
       }
 
       const downloadUrl = window.URL.createObjectURL(blob);
-
       const downloadLink = document.createElement("a");
 
       downloadLink.href = downloadUrl;
@@ -137,10 +155,11 @@ function EncryptionPanel() {
       window.URL.revokeObjectURL(downloadUrl);
 
       setStatus("success");
+
       setStatusMessage(
         operation === "encrypt"
-          ? "Encryption complete. Your file is ready."
-          : "Decryption complete. Your file is ready.",
+          ? "Encryption complete."
+          : "Decryption complete.",
       );
     } catch (error) {
       setStatus("error");
@@ -152,18 +171,63 @@ function EncryptionPanel() {
 
   return (
     <section className="encryption-section" id="encrypt">
-      <div className="section-heading">
-        <span className="section-kicker">AES WORKSPACE</span>
+      <div className="encryption-container">
+        <div className="encryption-header">
+          <span className="section-kicker">ENCRYPTION WORKSPACE</span>
 
-        <h2>Encrypt / Decrypt</h2>
+          <h2>Protect your files.</h2>
 
-        <p>
-          Select a file, choose how AES should process it, and prepare it for
-          secure transformation.
-        </p>
-      </div>
+          <p>Secure your files with AES encryption.</p>
+        </div>
 
-      <div className="encryption-workspace">
+        <div className="operation-toggle">
+          <button
+            type="button"
+            className={
+              operation === "encrypt" ? "toggle-option active" : "toggle-option"
+            }
+            onClick={() => handleOperationChange("encrypt")}
+            disabled={isProcessing}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="5" y="10" width="14" height="10" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+
+            <span>Encrypt</span>
+          </button>
+
+          <button
+            type="button"
+            className={
+              operation === "decrypt" ? "toggle-option active" : "toggle-option"
+            }
+            onClick={() => handleOperationChange("decrypt")}
+            disabled={isProcessing}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="5" y="10" width="14" height="10" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0" />
+            </svg>
+
+            <span>Decrypt</span>
+          </button>
+        </div>
+
         <div
           className={`file-drop-zone ${
             isDragging ? "dragging" : ""
@@ -184,15 +248,13 @@ function EncryptionPanel() {
           />
 
           {!selectedFile ? (
-            <>
-              <div className="upload-orb">
+            <div className="upload-content">
+              <div className="upload-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.6"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -202,31 +264,26 @@ function EncryptionPanel() {
                 </svg>
               </div>
 
-              <h3>Drop your file here</h3>
+              <h3>Drop your file here, or browse</h3>
 
-              <p>
-                or{" "}
-                <button
-                  type="button"
-                  className="browse-button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    openFilePicker();
-                  }}
-                >
-                  browse from your device
-                </button>
-              </p>
+              <p>Supports documents, images, archives and other file types</p>
 
-              <span className="upload-hint">Select a file to begin.</span>
-            </>
+              <button
+                type="button"
+                className="browse-button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openFilePicker();
+                }}
+              >
+                Browse from your device
+              </button>
+            </div>
           ) : (
             <div className="selected-file">
               <div className="file-icon">
                 <svg
                   viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -247,10 +304,7 @@ function EncryptionPanel() {
               <button
                 type="button"
                 className="remove-file"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  removeFile();
-                }}
+                onClick={removeFile}
                 aria-label="Remove selected file"
               >
                 ×
@@ -259,83 +313,57 @@ function EncryptionPanel() {
           )}
         </div>
 
-        <div className="configuration-area">
-          <div className="config-group">
-            <span className="config-label">OPERATION</span>
+        <div className="mode-selection">
+          <button
+            type="button"
+            className={`mode-card ${mode === "CBC" ? "active" : ""}`}
+            onClick={() => handleModeChange("CBC")}
+            disabled={isProcessing}
+          >
+            <div className="mode-card-header">
+              <span className="mode-radio"></span>
 
-            <div className="segmented-control">
-              <button
-                type="button"
-                className={operation === "encrypt" ? "selected" : ""}
-                onClick={() => {
-                  setOperation("encrypt");
-                  setStatus("ready");
-                  setStatusMessage("");
-                }}
-                disabled={isProcessing}
-              >
-                Encrypt
-              </button>
+              <span className="mode-name">CBC Mode</span>
 
-              <button
-                type="button"
-                className={operation === "decrypt" ? "selected" : ""}
-                onClick={() => {
-                  setOperation("decrypt");
-                  setStatus("ready");
-                  setStatusMessage("");
-                }}
-                disabled={isProcessing}
-              >
-                Decrypt
-              </button>
+              <span className="mode-code">AES / 02</span>
             </div>
-          </div>
 
-          <div className="config-group">
-            <span className="config-label">AES MODE</span>
+            <p>Cipher Block Chaining</p>
 
-            <div className="mode-options">
-              <button
-                type="button"
-                className={`mode-card ${mode === "ECB" ? "selected" : ""}`}
-                onClick={() => {
-                  setMode("ECB");
-                  setStatus("ready");
-                  setStatusMessage("");
-                }}
-                disabled={isProcessing}
-              >
-                <span className="mode-name">ECB</span>
+            <span className="mode-description">
+              Each block is linked to the previous block.
+            </span>
+          </button>
 
-                <span className="mode-description">Independent blocks</span>
-              </button>
+          <button
+            type="button"
+            className={`mode-card ${mode === "ECB" ? "active" : ""}`}
+            onClick={() => handleModeChange("ECB")}
+            disabled={isProcessing}
+          >
+            <div className="mode-card-header">
+              <span className="mode-radio"></span>
 
-              <button
-                type="button"
-                className={`mode-card ${mode === "CBC" ? "selected" : ""}`}
-                onClick={() => {
-                  setMode("CBC");
-                  setStatus("ready");
-                  setStatusMessage("");
-                }}
-                disabled={isProcessing}
-              >
-                <span className="mode-name">CBC</span>
+              <span className="mode-name">ECB Mode</span>
 
-                <span className="mode-description">Chained blocks</span>
-              </button>
+              <span className="mode-code">AES / 01</span>
             </div>
-          </div>
+
+            <p>Electronic Codebook</p>
+
+            <span className="mode-description">
+              Each block is encrypted independently.
+            </span>
+          </button>
         </div>
 
         <div className="process-area">
-          <div className="process-summary">
-            <span>{selectedFile ? selectedFile.name : "No file selected"}</span>
-
+          <div className="process-info">
             <span>
-              {operation.toUpperCase()} · AES-{mode}
+              {operation === "encrypt" ? "ENCRYPT" : "DECRYPT"} · AES-{mode}
             </span>
+
+            {selectedFile && <strong>{selectedFile.name}</strong>}
           </div>
 
           <button
@@ -346,20 +374,19 @@ function EncryptionPanel() {
           >
             <span>
               {isProcessing
-                ? "PROCESSING..."
+                ? "PROCESSING"
                 : operation === "encrypt"
                   ? "ENCRYPT FILE"
                   : "DECRYPT FILE"}
             </span>
 
-            <span className="process-arrow">{isProcessing ? "..." : "→"}</span>
+            <span>→</span>
           </button>
         </div>
 
         {status !== "ready" && (
           <div className={`operation-status ${status}`}>
-            <span className="status-indicator"></span>
-
+            <span className="status-dot"></span>
             <span>{statusMessage}</span>
           </div>
         )}

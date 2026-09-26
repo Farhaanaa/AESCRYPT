@@ -1,5 +1,6 @@
 import "./App.css";
 import EncryptionPanel from "./components/EncryptionPanel";
+import Visualization from "./pages/Visualization";
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
             </p>
 
             <div className="hero-actions">
-              <button className="primary-button">
+              <a className="primary-button" href="#encrypt">
                 <span>ENCRYPT A FILE</span>
 
                 <span className="button-arrow">
@@ -56,9 +57,11 @@ function App() {
                     <path d="m13 6 6 6-6 6" />
                   </svg>
                 </span>
-              </button>
+              </a>
 
-              <button className="secondary-button">EXPLORE AES MODES</button>
+              <a className="secondary-button" href="#visualize">
+                EXPLORE AES MODES
+              </a>
             </div>
           </div>
 
@@ -74,6 +77,8 @@ function App() {
         </section>
 
         <EncryptionPanel />
+
+        <Visualization />
       </main>
     </div>
   );
