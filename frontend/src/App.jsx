@@ -1,6 +1,7 @@
 import "./App.css";
 import EncryptionPanel from "./components/EncryptionPanel";
 import Visualization from "./pages/Visualization";
+import Comparison from "./pages/Comparison";
 
 function App() {
   return (
@@ -79,6 +80,8 @@ function App() {
         <EncryptionPanel />
 
         <Visualization />
+
+        <Comparison />
       </main>
     </div>
   );
