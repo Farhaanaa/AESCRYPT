@@ -1,4 +1,5 @@
 import "./App.css";
+import EncryptionPanel from "./components/EncryptionPanel";
 
 function App() {
   return (
@@ -71,6 +72,8 @@ function App() {
             <span>FILE ENCRYPTION</span>
           </div>
         </section>
+
+        <EncryptionPanel />
       </main>
     </div>
   );

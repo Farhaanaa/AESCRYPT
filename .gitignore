@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Generated files
+backend/uploads/*
+backend/outputs/*
+
+# Keep upload/output directories in Git
+!backend/uploads/.gitkeep
+!backend/outputs/.gitkeep
+
+# Node
+node_modules/
+dist/
