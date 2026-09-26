@@ -1,0 +1,2 @@
+AESCRYPT file encryption test.
+ECB and CBC should recover this exact content.
