@@ -2,7 +2,7 @@ import { useState } from "react";
 import ComparisonCard from "../components/ComparisonCard";
 import "./Comparison.css";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://aescrypt-backend.onrender.com";
 
 const DEFAULT_TEXT = "ATTACK AT DAWN!!ATTACK AT DAWN!!";
 

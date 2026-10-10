@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Visualization.css";
 import BlockVisualizer from "../components/BlockVisualizer";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://aescrypt-backend.onrender.com";
 
 const EXAMPLES = [
   "ATTACK AT DAWN!!ATTACK AT DAWN!!",

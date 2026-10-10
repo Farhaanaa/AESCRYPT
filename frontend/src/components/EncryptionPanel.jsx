@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import "./EncryptionPanel.css";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://aescrypt-backend.onrender.com";
 
 function EncryptionPanel() {
   const fileInputRef = useRef(null);
