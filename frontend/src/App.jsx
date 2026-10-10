@@ -1,4 +1,7 @@
 import "./App.css";
+import logo from "./assets/aescrypt-navbar.png";
+import heroLogo from "./assets/aescrypt-logo.png";
+
 import EncryptionPanel from "./components/EncryptionPanel";
 import Visualization from "./pages/Visualization";
 import Comparison from "./pages/Comparison";
@@ -11,7 +14,7 @@ function App() {
 
       <nav className="navbar">
         <a className="nav-logo" href="#home">
-          <img src="/src/assets/aescrypt-navbar.png" alt="AESCRYPT" />
+          <img src={logo} alt="AESCRYPT" />
         </a>
 
         <div className="nav-links">
@@ -30,7 +33,7 @@ function App() {
       <main>
         <section className="hero" id="home">
           <div className="hero-logo">
-            <img src="/src/assets/aescrypt-logo.png" alt="AESCRYPT" />
+            <img src={heroLogo} alt="AESCRYPT" />
           </div>
 
           <div className="hero-content">
